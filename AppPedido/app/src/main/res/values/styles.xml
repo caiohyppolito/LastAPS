@@ -1,0 +1,42 @@
+<resources>
+
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+
+        - <!--  Action Mode Overlay -->
+        <item name="windowActionModeOverlay">true</item>
+        <!-- Cor da Action Bar de Contexto (CAB) -->
+        <item name="actionModeBackground">@color/colorPrimary</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="AppThemeAbout" parent="Theme.AppCompat.Light.NoActionBar" />
+
+    <style name="FabStyle">
+        <item name="android:layout_width">56dp</item>
+        <item name="android:layout_height">56dp</item>
+        <item name="android:layout_marginRight">16dp</item>
+        <item name="android:layout_marginBottom">16dp</item>
+        <item name="android:layout_gravity">bottom|end</item>
+        <item name="borderWidth">0dp</item>
+        <item name="elevation">8dp</item>
+        <item name="pressedTranslationZ">12dp</item>
+        <item name="backgroundTint">@color/colorAccent</item>
+        <item name="android:scaleType">center</item>
+        <item name="rippleColor">@color/colorPrimary</item>
+
+    </style>
+
+</resources>

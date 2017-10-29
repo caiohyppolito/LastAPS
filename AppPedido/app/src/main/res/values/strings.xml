@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">AppPedido</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="category_activity_name">Categorias</string>
+    <string name="main_activity_name">Estabelecimentos</string>
+    <string name="product_activity_name">Produtos</string>
+    <string name="shopping_cart_activity_name">Meu Carrinho</string>
+
+    <!--String AboutActivity -->
+    <string name="title_activity_about">Sobre</string>
+    <string name="textViewVersion">Versão %s</string>
+    <string name="textViewCopyright">\u00a9 2017 - %d Aps.</string>
+    <string name="checkout">Finalizar Pedido</string>
+</resources>
