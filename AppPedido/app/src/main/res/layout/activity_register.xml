@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    tools:context="com.unip.apppedido.activities.LoginActivity">
+    tools:context="com.unip.apppedido.activities.RegisterActivity">
 
     <include layout="@layout/include_toolbar" />
 
@@ -56,32 +56,14 @@
 
             </android.support.design.widget.TextInputLayout>
 
-            <LinearLayout
+            <Button
+                android:id="@+id/buttonRegister"
+                style="@style/StyleButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
                 android:layout_marginTop="40dp"
-                android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/buttonLogin"
-                    style="@style/StyleButton"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/action_sign_in" />
-
-                <Button
-                    android:id="@+id/buttonRegister"
-                    style="@style/StyleButton"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginStart="10dp"
-                    android:layout_weight="1"
-                    android:text="@string/textRegister" />
-
-            </LinearLayout>
+                android:text="@string/textRegister" />
 
         </LinearLayout>
     </ScrollView>

@@ -3,27 +3,24 @@ package com.unip.apppedido.activities;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.unip.apppedido.R;
 import com.unip.apppedido.utils.AppControllerUtil;
 import com.unip.apppedido.utils.HttpVolleyUtil;
-
 import org.json.JSONObject;
 
-public class LoginActivity extends BaseActivity {
+public class RegisterActivity extends BaseActivity {
     private EditText mNameEditText;
     private EditText mPasswordEditText;
     private View mLoginFormView;
@@ -34,7 +31,7 @@ public class LoginActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_register);
 
         initialize();
     }
@@ -45,20 +42,12 @@ public class LoginActivity extends BaseActivity {
         mNameEditText = (EditText) findViewById(R.id.name);
         mPasswordEditText = (EditText) findViewById(R.id.password);
 
-        Button buttonLogin = (Button) findViewById(R.id.buttonLogin);
         Button buttonRegister = (Button) findViewById(R.id.buttonRegister);
 
-        buttonLogin.setOnClickListener(new OnClickListener() {
+        buttonRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 attemptLogin();
-            }
-        });
-
-        buttonRegister.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(), RegisterActivity.class));
             }
         });
 

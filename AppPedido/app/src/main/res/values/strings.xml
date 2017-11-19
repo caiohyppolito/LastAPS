@@ -27,4 +27,5 @@
     <string name="error_load">Falha ao carregar</string>
     <string name="success_sell">Pedido realizado com sucesso</string>
     <string name="textLoading">Carregando...</string>
+    <string name="textRegister">Registrar</string>
 </resources>
