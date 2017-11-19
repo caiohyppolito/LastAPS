@@ -1,5 +1,7 @@
 package com.unip.apppedido.activities;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,6 +13,8 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.unip.apppedido.R;
@@ -27,6 +31,11 @@ public class MainActivity extends BaseActivity
 
     private List<EstabelecimentoModel> mListEstabelecimento;
     private EstabelecimentoAdapter mEstabelecimentoAdapter;
+
+    private View mView;
+
+    private ProgressBar mProgressBar;
+    private LinearLayout mLinearLayoutProgress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,9 +55,17 @@ public class MainActivity extends BaseActivity
     private void initialize(){
         mListEstabelecimento = new ArrayList<>();
 
+        mView = findViewById(R.id.coordinatorLayoutMainAct);
+
+        setupProgress();
         setupToolbar();
         setupRecyclerView();
         loadDataFake();
+    }
+
+    private void setupProgress(){
+        mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
+        mLinearLayoutProgress = (LinearLayout) findViewById(R.id.linearLayoutProgress);
     }
 
     private void setupToolbar(){
@@ -94,11 +111,13 @@ public class MainActivity extends BaseActivity
 
     private void loadDataFake()
     {
+        showProgress(true);
         for (int i = 0; i < 10; i++) {
-            mListEstabelecimento.add(new EstabelecimentoModel(i, "Teste: " + i));
+            mListEstabelecimento.add(new EstabelecimentoModel(i + 1, "Teste: " + i));
         }
 
         mEstabelecimentoAdapter.notifyDataSetChanged();
+        showProgress(false);
     }
 
     @Override
@@ -124,6 +143,29 @@ public class MainActivity extends BaseActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void showProgress(final boolean show) {
+        int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+
+        mView.setVisibility(show ? View.GONE : View.VISIBLE);
+        mLinearLayoutProgress.setVisibility(show ? View.VISIBLE : View.GONE);
+        mView.animate().setDuration(shortAnimTime).alpha(
+                show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mView.setVisibility(show ? View.GONE : View.VISIBLE);
+            }
+        });
+
+        mProgressBar.setVisibility(show ? View.VISIBLE : View.GONE);
+        mProgressBar.animate().setDuration(shortAnimTime).alpha(
+                show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mProgressBar.setVisibility(show ? View.VISIBLE : View.GONE);
+            }
+        });
     }
 
     @Override

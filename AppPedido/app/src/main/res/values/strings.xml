@@ -14,4 +14,17 @@
     <string name="textViewVersion">Versão %s</string>
     <string name="textViewCopyright">\u00a9 2017 - %d Aps.</string>
     <string name="checkout">Finalizar Pedido</string>
+    <string name="title_activity_login">Login</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_name">Nome</string>
+    <string name="prompt_password">Senha</string>
+    <string name="action_sign_in">Login</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_incorrect_password">Senha invalida</string>
+    <string name="error_field_required">Campo obrigatório</string>
+    <string name="error_login">Falha ao realizar o login</string>
+    <string name="error_load">Falha ao carregar</string>
+    <string name="success_sell">Pedido realizado com sucesso</string>
+    <string name="textLoading">Carregando...</string>
 </resources>

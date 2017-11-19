@@ -1,19 +1,35 @@
 package com.unip.apppedido.activities;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
 import android.os.Parcelable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.unip.apppedido.R;
 import com.unip.apppedido.adapters.ProductAdapter;
+import com.unip.apppedido.models.CategoryModel;
 import com.unip.apppedido.models.ProductModel;
+import com.unip.apppedido.utils.AppControllerUtil;
+import com.unip.apppedido.utils.HttpVolleyUtil;
+import com.unip.apppedido.utils.ResponseJsonUtil;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,9 +38,14 @@ public class ProductActivity extends BaseActivity implements ProductAdapter.IPro
 
     public static final String PUT_EXTRA_ID_CATEGORY = "PutExtraIdCategory";
 
+    private View mView;
+
     private ProductAdapter mProductAdapter;
     private List<ProductModel> mListProduct;
     private int mIdCategory;
+
+    private ProgressBar mProgressBar;
+    private LinearLayout mLinearLayoutProgress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,11 +69,17 @@ public class ProductActivity extends BaseActivity implements ProductAdapter.IPro
             mIdCategory = getIntent().getIntExtra(PUT_EXTRA_ID_CATEGORY, 0);
         }
 
-        mListProduct = new ArrayList<>();
-
+        setupProgress();
         setupToolbar();
-        setupRecyclerView();
-        loadDataFake();
+
+        mView = findViewById(R.id.coordinatorLayout);
+
+        loadProducts();
+    }
+
+    private void setupProgress(){
+        mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
+        mLinearLayoutProgress = (LinearLayout) findViewById(R.id.linearLayoutProgress);
     }
 
     private void setupToolbar() {
@@ -94,16 +121,74 @@ public class ProductActivity extends BaseActivity implements ProductAdapter.IPro
         }
     }
 
-    private void loadDataFake() {
+    private void loadProducts() {
+        showProgress(true);
+
         // O id do estabelecimento está "salvo" no application. Função que retorna "getIdEstabelecimento"
 
-        int idEstabelecimento = getIdEstabelecimento();
+        HttpVolleyUtil request = new HttpVolleyUtil(Request.Method.GET, "Produtos?IdEmpresa=" + getIdEstabelecimento(), null, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
 
-        for (int i = 0; i < 10; i++) {
-            mListProduct.add(new ProductModel(i, "Teste: " + i, 10 * (i + 1)));
-        }
+                showProgress(false);
 
-        mProductAdapter.notifyDataSetChanged();
+                if(response != null){
+                    try{
+                        JSONObject jsonObject = new JSONObject(response);
+
+                        String error = jsonObject.has("Erro") ? jsonObject.getString("Erro") : null;
+
+                        if(error == null || error.equals("")){
+                            mListProduct = new Gson().fromJson(ResponseJsonUtil.getListJson(response), new TypeToken<List<ProductModel>>(){}.getType());
+
+                            setupRecyclerView();
+                        }
+                        else
+                        {
+                            Snackbar.make(mView, error, Snackbar.LENGTH_LONG).show();
+                        }
+
+                    }catch (Exception e){
+                        Snackbar.make(mView, R.string.error_load, Snackbar.LENGTH_LONG).show();
+                    }
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                showProgress(false);
+
+                Snackbar.make(mView, R.string.error_load, Snackbar.LENGTH_LONG).show();
+            }
+        });
+
+        // Adding request to request queue
+        AppControllerUtil.getInstance(this).addToRequestQueue(request);
+    }
+
+    private void showProgress(final boolean show) {
+        int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+
+        final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerViewProduct);
+
+        recyclerView.setVisibility(show ? View.GONE : View.VISIBLE);
+        mLinearLayoutProgress.setVisibility(show ? View.VISIBLE : View.GONE);
+        recyclerView.animate().setDuration(shortAnimTime).alpha(
+                show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                recyclerView.setVisibility(show ? View.GONE : View.VISIBLE);
+            }
+        });
+
+        mProgressBar.setVisibility(show ? View.VISIBLE : View.GONE);
+        mProgressBar.animate().setDuration(shortAnimTime).alpha(
+                show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mProgressBar.setVisibility(show ? View.VISIBLE : View.GONE);
+            }
+        });
     }
 
     @Override

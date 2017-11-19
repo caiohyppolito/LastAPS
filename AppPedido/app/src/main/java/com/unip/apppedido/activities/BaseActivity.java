@@ -41,4 +41,12 @@ public class BaseActivity extends AppCompatActivity{
     public int getIdEstabelecimento() {
         return getAppPedidoApplication().getIdEstabelecimento();
     }
+
+    public int getIdUser() {
+        return getAppPedidoApplication().getIdUser();
+    }
+
+    public void setIdUser(int idUser) {
+        this.getAppPedidoApplication().setIdUser(idUser);
+    }
 }

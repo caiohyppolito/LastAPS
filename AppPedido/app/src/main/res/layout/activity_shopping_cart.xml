@@ -10,36 +10,46 @@
 
     <include layout="@layout/include_toolbar" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerViewShoppingCart"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:scrollbars="vertical"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+    <include layout="@layout/include_progress"/>
 
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="10dp"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/textViewTotalCart"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="10dp"
-            android:textSize="30sp"
-            android:textColor="@color/colorPrimary"/>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerViewShoppingCart"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:scrollbars="vertical"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-        <Button
-            android:id="@+id/buttonCheckout"
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/checkout"
-            android:textColor="@color/white"
-            android:background="@color/colorAccent"/>
+            android:paddingTop="10dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textViewTotalCart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="10dp"
+                android:textSize="30sp"
+                android:textColor="@color/colorPrimary"/>
+
+            <Button
+                android:id="@+id/buttonCheckout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/checkout"
+                android:textColor="@color/white"
+                android:background="@color/colorAccent"/>
+        </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>

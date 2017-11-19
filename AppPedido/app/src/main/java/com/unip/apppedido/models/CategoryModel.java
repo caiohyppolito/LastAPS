@@ -1,7 +1,12 @@
 package com.unip.apppedido.models;
 
+import com.google.gson.annotations.SerializedName;
+
 public class CategoryModel {
+    @SerializedName("tipoProdutoId")
     private int mId;
+
+    @SerializedName("descricao")
     private String mName;
 
     public CategoryModel(int id, String name) {

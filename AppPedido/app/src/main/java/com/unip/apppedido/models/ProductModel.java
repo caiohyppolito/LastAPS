@@ -3,10 +3,19 @@ package com.unip.apppedido.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 public class ProductModel implements Parcelable{
+    @SerializedName("produtoId")
     private int mId;
+
+    @SerializedName("descricaoProduto")
     private String mName;
+
+    @SerializedName("tipoProdutoId")
     private int mIdCategory;
+
+    @SerializedName("valor")
     private double mValue;
 
     public ProductModel() {

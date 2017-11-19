@@ -16,7 +16,7 @@ import java.util.List;
 
 public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartViewHolder> {
     public interface IShoppingCartListener {
-        void onClickListener(ShoppingCartModel itemShoppingCart);
+        void onClickListener(View view, ShoppingCartModel itemShoppingCart, boolean isToRemoveQuantity);
     }
 
     private IShoppingCartListener mShoppingCartListener;
@@ -29,20 +29,29 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartViewHo
 
     @Override
     public ShoppingCartViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.shopping_cart_adapter, parent, false);
+        final View viewInflater = LayoutInflater.from(parent.getContext()).inflate(R.layout.shopping_cart_adapter, parent, false);
 
-        ShoppingCartViewHolder viewHolder = new ShoppingCartViewHolder(view);
+        ShoppingCartViewHolder viewHolder = new ShoppingCartViewHolder(viewInflater);
 
-        viewHolder.relativeLayoutCart.setOnClickListener(new View.OnClickListener() {
+        viewHolder.imageButtonAddMoreQuantity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mShoppingCartListener != null) {
-                    View parent = (View) view.getParent();
+                View parent = (View) view.getParent().getParent().getParent();
 
-                    int position = (int) parent.getTag();
+                int position = (int) parent.getTag();
 
-                    mShoppingCartListener.onClickListener(mListShoppingCart.get(position));
-                }
+                mShoppingCartListener.onClickListener(viewInflater, mListShoppingCart.get(position), false);
+            }
+        });
+
+        viewHolder.imageButtonRemoveQuantity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                View parent = (View) view.getParent().getParent().getParent();
+
+                int position = (int) parent.getTag();
+
+                mShoppingCartListener.onClickListener(viewInflater, mListShoppingCart.get(position), true);
             }
         });
 
@@ -53,7 +62,7 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartViewHo
     public void onBindViewHolder(ShoppingCartViewHolder holder, int position) {
         ShoppingCartModel item = mListShoppingCart.get(position);
 
-        holder.textViewNameProduct.setText(item.getProduct().getName());
+        holder.textViewNameProduct.setText(item.getName());
         holder.textViewQuantity.setText(String.valueOf(item.getQuantity()));
         holder.textViewTotalProduct.setText(MoneyFormatUtil.formatToMoney(item.getTotalProduct()));
 
