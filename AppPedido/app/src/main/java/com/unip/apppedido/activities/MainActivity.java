@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.design.widget.NavigationView;
@@ -17,10 +18,21 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.unip.apppedido.R;
 import com.unip.apppedido.adapters.EstabelecimentoAdapter;
+import com.unip.apppedido.models.CategoryModel;
 import com.unip.apppedido.models.EstabelecimentoModel;
+import com.unip.apppedido.utils.AppControllerUtil;
 import com.unip.apppedido.utils.AppPackageUtil;
+import com.unip.apppedido.utils.HttpVolleyUtil;
+import com.unip.apppedido.utils.ResponseJsonUtil;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,14 +65,11 @@ public class MainActivity extends BaseActivity
     }
 
     private void initialize(){
-        mListEstabelecimento = new ArrayList<>();
-
         mView = findViewById(R.id.coordinatorLayoutMainAct);
 
         setupProgress();
         setupToolbar();
-        setupRecyclerView();
-        loadDataFake();
+        loadEstabelecimentos();
     }
 
     private void setupProgress(){
@@ -109,15 +118,46 @@ public class MainActivity extends BaseActivity
         textViewVersion.setText(getString(R.string.textViewVersion, AppPackageUtil.getVersionName(this)));
     }
 
-    private void loadDataFake()
+    private void loadEstabelecimentos()
     {
         showProgress(true);
-        for (int i = 0; i < 10; i++) {
-            mListEstabelecimento.add(new EstabelecimentoModel(i + 1, "Teste: " + i));
-        }
 
-        mEstabelecimentoAdapter.notifyDataSetChanged();
-        showProgress(false);
+        HttpVolleyUtil request = new HttpVolleyUtil(Request.Method.GET, "Estabelecimento/Get", null, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                showProgress(false);
+
+                if(response != null){
+                    try{
+                        JSONObject jsonObject = new JSONObject(response);
+
+                        String error = jsonObject.has("MensagemErro") ? jsonObject.getString("MensagemErro") : null;
+
+                        if(error == null || error.equals("")){
+                            mListEstabelecimento = new Gson().fromJson(ResponseJsonUtil.getListJson(response), new TypeToken<List<EstabelecimentoModel>>(){}.getType());
+
+                            setupRecyclerView();
+                        }
+                        else
+                        {
+                            Snackbar.make(mView, error, Snackbar.LENGTH_LONG).show();
+                        }
+
+                    }catch (Exception e){
+                        Snackbar.make(mView, R.string.error_load, Snackbar.LENGTH_LONG).show();
+                    }
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                showProgress(false);
+                Snackbar.make(mView, R.string.error_load, Snackbar.LENGTH_LONG).show();
+            }
+        });
+
+        // Adding request to request queue
+        AppControllerUtil.getInstance(this).addToRequestQueue(request);
     }
 
     @Override

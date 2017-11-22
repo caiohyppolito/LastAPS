@@ -1,7 +1,12 @@
 package com.unip.apppedido.models;
 
+import com.google.gson.annotations.SerializedName;
+
 public class EstabelecimentoModel {
+    @SerializedName("idEstabelecimento")
     private int mId;
+
+    @SerializedName("nomeExibicao")
     private String mName;
 
     public EstabelecimentoModel(int id, String name) {

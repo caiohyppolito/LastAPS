@@ -15,7 +15,9 @@ import android.widget.ProgressBar;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.google.gson.Gson;
 import com.unip.apppedido.R;
+import com.unip.apppedido.models.RegisterRequest;
 import com.unip.apppedido.utils.AppControllerUtil;
 import com.unip.apppedido.utils.HttpVolleyUtil;
 import org.json.JSONObject;
@@ -23,6 +25,7 @@ import org.json.JSONObject;
 public class RegisterActivity extends BaseActivity {
     private EditText mNameEditText;
     private EditText mPasswordEditText;
+    private EditText mEditTextPhone;
     private View mLoginFormView;
 
     private ProgressBar mProgressBar;
@@ -41,6 +44,7 @@ public class RegisterActivity extends BaseActivity {
 
         mNameEditText = (EditText) findViewById(R.id.name);
         mPasswordEditText = (EditText) findViewById(R.id.password);
+        mEditTextPhone = (EditText) findViewById(R.id.phoneNumber);
 
         Button buttonRegister = (Button) findViewById(R.id.buttonRegister);
 
@@ -70,12 +74,20 @@ public class RegisterActivity extends BaseActivity {
         // Reset errors.
         mNameEditText.setError(null);
         mPasswordEditText.setError(null);
+        mEditTextPhone.setError(null);
 
         String name = mNameEditText.getText().toString();
         String password = mPasswordEditText.getText().toString();
+        String phoneNumber = mEditTextPhone.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
+
+        if (TextUtils.isEmpty(phoneNumber)) {
+            mEditTextPhone.setError(getString(R.string.error_field_required));
+            focusView = mEditTextPhone;
+            cancel = true;
+        }
 
         if (TextUtils.isEmpty(password)) {
             mPasswordEditText.setError(getString(R.string.error_field_required));
@@ -94,7 +106,9 @@ public class RegisterActivity extends BaseActivity {
         } else {
             showProgress(true);
 
-            HttpVolleyUtil request = new HttpVolleyUtil(Request.Method.GET, "login?usuario=" + name + "&senha=" + password +"&tipoLogin=2", null, new Response.Listener<String>() {
+            RegisterRequest register = new RegisterRequest(0, password, name, phoneNumber);
+
+            HttpVolleyUtil request = new HttpVolleyUtil(Request.Method.POST, "Consumidor/Add", new Gson().toJson(register), new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
                     showProgress(false);
@@ -103,11 +117,9 @@ public class RegisterActivity extends BaseActivity {
                         try{
                             JSONObject jsonObject = new JSONObject(response);
 
-
-                            String error = jsonObject.has("ErroMsg") ? jsonObject.getString("ErroMsg") : null;
                             int idUser = jsonObject.has("loginId") ? jsonObject.getInt("loginId") : 0;
 
-                            if((error == null || error.equals("")) && idUser > 0){
+                            if(idUser > 0){
                                 // Seta no application, para usar em outras activities
                                 setIdUser(idUser);
 
@@ -115,7 +127,7 @@ public class RegisterActivity extends BaseActivity {
                             }
                             else
                             {
-                                Snackbar.make(mLoginFormView, error, Snackbar.LENGTH_LONG).show();
+                                Snackbar.make(mLoginFormView, R.string.error_login, Snackbar.LENGTH_LONG).show();
                             }
 
                         }catch (Exception e){

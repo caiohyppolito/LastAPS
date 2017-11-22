@@ -126,7 +126,8 @@ public class ProductActivity extends BaseActivity implements ProductAdapter.IPro
 
         // O id do estabelecimento está "salvo" no application. Função que retorna "getIdEstabelecimento"
 
-        HttpVolleyUtil request = new HttpVolleyUtil(Request.Method.GET, "Produtos?IdEmpresa=" + getIdEstabelecimento(), null, new Response.Listener<String>() {
+
+        HttpVolleyUtil request = new HttpVolleyUtil(Request.Method.GET, "Produtos/GetProdutosPorCategoria?IdEmpresa=" + getIdEstabelecimento() + "&idCategoria=" + String.valueOf(mIdCategory), null, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
 
@@ -138,7 +139,7 @@ public class ProductActivity extends BaseActivity implements ProductAdapter.IPro
 
                         String error = jsonObject.has("Erro") ? jsonObject.getString("Erro") : null;
 
-                        if(error == null || error.equals("")){
+                        if(error == null || error.equals("") || error.equals("null")){
                             mListProduct = new Gson().fromJson(ResponseJsonUtil.getListJson(response), new TypeToken<List<ProductModel>>(){}.getType());
 
                             setupRecyclerView();

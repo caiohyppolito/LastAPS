@@ -28,4 +28,5 @@
     <string name="success_sell">Pedido realizado com sucesso</string>
     <string name="textLoading">Carregando...</string>
     <string name="textRegister">Registrar</string>
+    <string name="promptPhone">Celular</string>
 </resources>

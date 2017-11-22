@@ -83,7 +83,7 @@ public class ShoppingCartActivity extends BaseActivity implements ShoppingCartAd
             public void onClick(View view) {
                 showProgress(true);
 
-                HttpVolleyUtil request = new HttpVolleyUtil(Request.Method.POST, "Pedido", new Gson().toJson(mListShoppingCart), new Response.Listener<String>() {
+                HttpVolleyUtil request = new HttpVolleyUtil(Request.Method.POST, "Pedido/Post", new Gson().toJson(mListShoppingCart), new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
 
@@ -186,8 +186,7 @@ public class ShoppingCartActivity extends BaseActivity implements ShoppingCartAd
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menuAddMoreItems:
-                Intent intent = new Intent(getApplicationContext(), CategoryActivity.class);
-                startActivity(intent);
+                finish();
                 break;
         }
         return true;
